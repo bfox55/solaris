@@ -274,6 +274,26 @@
         "Files": "4 files + vendored three.js + LICENSE",
         "Tests": "none"
       }
+    },
+    {
+      model: "OpenAI Astra — Daniel Burla",
+      date: "2026-09-10",
+      name: "Orrery",
+      href: "universe/",
+      src: "https://github.com/daniel-burla/universe-simulator",
+      note: "Daniel Burla's standalone 'Orrery' build of this prompt, created with OpenAI Astra (Vite + React + TS), redistributed with Daniel's direct permission — the repo carries no license file, so his permission is the whole basis (see universe/PROVENANCE.md). Shipped as his built, self-contained dist: three.js 0.180 bundled (484 KB), zero CDN, and all its embedded third-party IP kept intact — Solar System Scope planet textures (CC BY 4.0, with ATTRIBUTION.md), SIL-licensed DM Sans/Manrope fonts, and JPL Table 1 orbital data. Its real differentiator is the two-scale experience: the solar system zooms out into an illustrative Milky Way view, and time runs from real time to a simulated year per second with reverse-and-pause, clamped to JPL Table 1's valid 1800–2050 window. Credit: Daniel Burla; it is his work, not ours.",
+      spec: {
+        "Element set": "JPL Table 1, elements + secular rates",
+        "Secular rates": "yes — JPL Table 1, 1800–2050",
+        "Solver": "Kepler solved per simulated date",
+        "Velocity": "not computed (Kepler placement, no vis-viva)",
+        "Bodies": "8 planets + Moon + asteroid belt + illustrative Milky Way",
+        "Axial tilt": "per planet, rotation time-scaled",
+        "Starfield": "illustrative stars + Milky Way, not a catalog",
+        "three.js": "bundled 0.180, 484 KB",
+        "Files": "3 app files + 12 textures + 9 fonts + licenses",
+        "Tests": "source ships tests; build ships none"
+      }
     }
   ];
 
