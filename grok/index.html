@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmos · Solar System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="canvas-wrap"></div>
+
+  <!-- Top bar -->
+  <header class="hud-top">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      <div>
+        <h1>Cosmos</h1>
+        <p>Solar system · accelerated time</p>
+      </div>
+    </div>
+    <div class="top-stats">
+      <div class="stat">
+        <span class="stat-label">Sim date</span>
+        <span class="stat-value" id="sim-date">2000-01-01</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Speed</span>
+        <span class="stat-value" id="speed-label">1×</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Brightness</span>
+        <span class="stat-value" id="brightness-label">1.0×</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Focus</span>
+        <span class="stat-value" id="focus-label">Sun</span>
+      </div>
+      <button type="button" class="stat log-toggle-btn" id="log-toggle" title="Toggle debug log (`)">
+        <span class="stat-label">Debug</span>
+        <span class="stat-value">Log</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Debug log panel -->
+  <aside class="log-panel" id="log-panel" aria-hidden="true">
+    <div class="log-panel-header">
+      <div class="log-panel-title">
+        <strong>Debug Log</strong>
+        <span id="log-fps" class="log-fps">— fps</span>
+        <span id="log-count" class="log-count">0</span>
+      </div>
+      <button type="button" class="log-icon-btn" id="log-close" title="Close">×</button>
+    </div>
+    <div class="log-toolbar">
+      <select id="log-level-filter" title="Minimum level">
+        <option value="debug">All</option>
+        <option value="info" selected>Info+</option>
+        <option value="warn">Warn+</option>
+        <option value="error">Error</option>
+      </select>
+      <input type="search" id="log-search" placeholder="Filter…" autocomplete="off" />
+      <label class="log-check" title="Auto-scroll to newest">
+        <input type="checkbox" id="log-autoscroll" checked /> Scroll
+      </label>
+      <label class="log-check" title="Also print to browser console">
+        <input type="checkbox" id="log-console-mirror" checked /> Console
+      </label>
+      <button type="button" class="log-tool-btn" id="log-pause">Pause</button>
+      <button type="button" class="log-tool-btn" id="log-clear">Clear</button>
+      <button type="button" class="log-tool-btn" id="log-copy">Copy</button>
+      <button type="button" class="log-tool-btn" id="log-download">JSON</button>
+    </div>
+    <div class="log-list" id="log-list" role="log" aria-live="polite"></div>
+    <div class="log-footer">
+      <kbd>`</kbd> toggle · <kbd>Ctrl+Shift+L</kbd> clear · <code>window.CosmosLog</code> in DevTools
+    </div>
+  </aside>
+
+  <!-- Planet list -->
+  <aside class="hud-side">
+    <div class="panel">
+      <div class="panel-title">Bodies</div>
+      <ul class="body-list" id="body-list"></ul>
+    </div>
+  </aside>
+
+  <!-- Bottom controls -->
+  <footer class="hud-bottom">
+    <div class="panel controls">
+      <div class="control-stack">
+        <div class="control-group">
+          <label for="speed">Time scale</label>
+          <input type="range" id="speed" min="0" max="8" step="0.01" value="2" />
+          <div class="speed-presets">
+            <button type="button" data-speed="0">Pause</button>
+            <button type="button" data-speed="1">1×</button>
+            <button type="button" data-speed="30">30×</button>
+            <button type="button" data-speed="365">1y/s</button>
+            <button type="button" data-speed="3650">10y/s</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="brightness">Brightness <span class="inline-val" id="brightness-slider-val">1.0×</span></label>
+          <input type="range" id="brightness" min="0.3" max="3" step="0.05" value="1.2" />
+          <div class="speed-presets brightness-presets">
+            <button type="button" data-brightness="0.6">Dim</button>
+            <button type="button" data-brightness="1">Natural</button>
+            <button type="button" data-brightness="1.5">Bright</button>
+            <button type="button" data-brightness="2.5">Max</button>
+          </div>
+        </div>
+      </div>
+      <div class="control-group toggles">
+        <label class="toggle">
+          <input type="checkbox" id="orbits" checked />
+          <span>Orbits</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="labels" checked />
+          <span>Labels</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="trails" />
+          <span>Trails</span>
+        </label>
+      </div>
+      <div class="control-group actions">
+        <button type="button" id="btn-reset" class="btn">Reset view</button>
+        <button type="button" id="btn-follow" class="btn primary">Follow focus</button>
+      </div>
+    </div>
+
+    <!-- Black hole panel -->
+    <div class="panel bh-panel">
+      <div class="bh-header">
+        <span class="bh-icon"></span>
+        <div>
+          <div class="panel-title" style="padding:0">Black hole experiment</div>
+          <p class="bh-status" id="bh-status">Ready to deploy a black hole</p>
+        </div>
+      </div>
+      <div class="bh-controls">
+        <div class="control-group bh-mass-group">
+          <label for="bh-mass">Mass <span class="inline-val" id="bh-mass-val">50 M☉</span></label>
+          <input type="range" id="bh-mass" min="10" max="200" step="1" value="50" />
+        </div>
+        <div class="bh-buttons">
+          <button type="button" id="btn-deploy-bh" class="btn danger">Place (click map)</button>
+          <button type="button" id="btn-bh-here" class="btn danger">Spawn at belt</button>
+          <button type="button" id="btn-remove-bh" class="btn" disabled>Remove BH</button>
+          <button type="button" id="btn-restore" class="btn">Restore system</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint">
+      Drag to orbit · Scroll to zoom · Click a body to focus · Deploy BH then click space
+    </div>
+  </footer>
+
+  <!-- Detail card -->
+  <div class="detail-card" id="detail-card">
+    <div class="detail-swatch" id="detail-swatch"></div>
+    <div class="detail-body">
+      <h2 id="detail-name">Sun</h2>
+      <p id="detail-desc">The star at the center of our solar system.</p>
+      <dl id="detail-facts"></dl>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.js",
+      "three/addons/": "./vendor/addons/"
+    }
+  }
+  </script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

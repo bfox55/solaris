@@ -254,6 +254,26 @@
         "Files": "1 self-contained",
         "Tests": "none"
       }
+    },
+    {
+      model: "xAI Grok — community build",
+      date: "2026-07-11",
+      name: "Cosmos",
+      href: "grok/",
+      src: "https://github.com/MinkwanK/grok-solar-system",
+      note: "A third-party 'Cosmos' build of this prompt by MinkwanK (김민관) — MIT-licensed, self-hosted, shipped here with its LICENSE intact. Not xAI's artifact: xAI's Grok 4.5 demo is a separate inline three.js r172 canvas embedded in their marketing page, whereas this is MinkwanK's standalone static build (three.js 0.170.0, self-contained, zero CDN). Like the in-house runs it solves Kepler's equation with real per-planet eccentricities, but on view-compressed radii (distances 14–118 in scene units, not AU) with no secular rates, so the system is a clean diagram rather than a period-accurate ephemeris. The HUD leads with time-scale presets (Pause / 1× / 30× / 1y/s / 10y/s) plus a brightness slider for dialing down to Neptune — the two things a casual viewer actually reaches for — and adds a black-hole deploy toy the prompt never asked for. Credit: MinkwanK (see grok/LICENSE); it is their work, not ours.",
+      spec: {
+        "Element set": "view-scaled a, real eccentricities",
+        "Secular rates": "no",
+        "Solver": "fixed-point E = M + e·sin E, 6 iter",
+        "Velocity": "finite-difference, Δt = 0.05 d",
+        "Bodies": "Sun + 8 planets + Moon + asteroid belt",
+        "Axial tilt": "per planet",
+        "Starfield": "procedural points + nebula shader",
+        "three.js": "vendored 0.170.0, 1.25 MB",
+        "Files": "4 files + vendored three.js + LICENSE",
+        "Tests": "none"
+      }
     }
   ];
 
