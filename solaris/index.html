@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<title>Solaris — Solar System Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="scene-wrap"></div>
+<div id="labels"></div>
+
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-ring"></div>
+    <div class="loader-text">igniting the sun</div>
+  </div>
+</div>
+
+<!-- ══════════ HUD ══════════ -->
+<header class="hud">
+  <section class="card brand" aria-label="simulator status">
+    <div class="brand-row">
+      <div class="brand-title">SOLARIS</div>
+      <div class="brand-sub">solar system · keplerian orbits · j2000</div>
+    </div>
+    <div class="clock">
+      <div class="clock-label">simulation time</div>
+      <div class="clock-value" id="sim-date">01 Jan 2000</div>
+      <div class="clock-rate" id="sim-rate">2 days / sec</div>
+    </div>
+  </section>
+
+  <section class="card toggles" aria-label="display options">
+    <div class="toggles-label">display</div>
+    <div class="tgl-row">
+      <button class="tgl on" data-toggle="orbits"><i class="dot"></i>orbits</button>
+      <button class="tgl on" data-toggle="labels"><i class="dot"></i>labels</button>
+      <button class="tgl on" data-toggle="grid"><i class="dot"></i>ecliptic</button>
+      <button class="tgl on" data-toggle="bloom"><i class="dot"></i>glow</button>
+    </div>
+    <div class="tgl-row">
+      <button class="tgl ghost" id="btn-reset">↺ reset view</button>
+      <button class="tgl ghost" id="btn-home">⌂ sun</button>
+    </div>
+  </section>
+</header>
+
+<div class="hint" id="hint">
+  <span>drag</span> orbit&nbsp;·&nbsp;<span>scroll</span> zoom&nbsp;·&nbsp;<span>click a body</span> track it&nbsp;·&nbsp;<span>space</span> pause
+</div>
+
+<section class="card timebar" aria-label="time controls">
+  <button class="play" id="play-pause" aria-label="pause">
+    <svg id="icon-pause" viewBox="0 0 16 16" width="14" height="14"><rect x="2.5" y="2" width="3.6" height="12" rx="1"/><rect x="9.9" y="2" width="3.6" height="12" rx="1"/></svg>
+    <svg id="icon-play" viewBox="0 0 16 16" width="14" height="14" style="display:none"><path d="M3.5 2.2c0-.8.9-1.3 1.6-.9l9 5.8c.6.4.6 1.4 0 1.8l-9 5.8c-.7.4-1.6-.1-1.6-.9z"/></svg>
+  </button>
+  <div class="speed-block">
+    <div class="chips" id="chips">
+      <button class="chip" data-rate="0.0417">1h</button>
+      <button class="chip on" data-rate="1">1d</button>
+      <button class="chip" data-rate="7">1w</button>
+      <button class="chip" data-rate="30.44">1mo</button>
+      <button class="chip" data-rate="365.25">1y</button>
+      <button class="chip" data-rate="3652.5">10y</button>
+    </div>
+    <div class="slider-row">
+      <input type="range" id="rate" min="0" max="1000" step="1" value="0" aria-label="time speed"/>
+      <div class="rate-readout" id="rate-readout">2 d/s</div>
+    </div>
+  </div>
+</section>
+
+<aside class="card selection" id="selection" aria-label="selected body">
+  <div class="sel-head">
+    <div>
+      <div class="sel-name" id="sel-name">Earth</div>
+      <div class="sel-sub" id="sel-sub">terrestrial planet</div>
+    </div>
+    <button class="sel-close" id="sel-close" aria-label="close">×</button>
+  </div>
+  <div class="sel-grid" id="sel-grid"></div>
+  <div class="sel-live">
+    <span class="sel-live-label" id="sel-live-label">distance from sun</span>
+    <b class="sel-live-val" id="sel-dist">1.00 AU</b>
+  </div>
+</aside>
+
+<script type="module" src="./js/engine.js"></script>
+</body>
+</html>

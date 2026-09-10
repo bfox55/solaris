@@ -1,54 +1,35 @@
-# SOLARIS — solar system & universe, sped up
+# Orrery Bench
 
-A zero-build Three.js simulation of the solar system with **real J2000
-Keplerian orbital elements** — every planet (plus the Moon and Halley's
-comet) moves where it actually is on any given date, elliptical orbits and
-all. Distances are radially compressed (sqrt scale) so the outer planets
-fit on screen; motion stays true to Kepler's laws.
+One prompt, held fixed, handed to a different model each time.
 
-## Run
+**Live:** https://bfox55.github.io/solaris/
 
-Static site — any static server works:
+The brief — identical for every run, with no follow-up steering, no reference
+implementation, and no shared code between runs:
 
-    cd ~/projects/solaris
-    python3 -m http.server 8731
-    # open http://localhost:8731
+> Make a beautiful simulation of the universe and solar system. should be sped up
+> with adjustable time, realistic motion, orbits, stars. use threejs. Make the HUD
+> well styled and conform to modern design principles
 
-All three.js r160 modules are vendored in `vendor/` — no network needed.
+## Runs
 
-## Controls
+| # | Build | Model | Path |
+|---|---|---|---|
+| 01 | SOLARIS | Qwen3.8-27B NVFP4 (local, via Hermes) | [`/solaris/`](https://bfox55.github.io/solaris/solaris/) |
+| 02 | Ephemeris Orrery | Claude Opus 5 | [`/orrery/`](https://bfox55.github.io/solaris/orrery/) |
 
-- **drag** orbit · **wheel** zoom · **click a body** to select & follow it
-- bottom dock: play/pause, preset rate chips (1 h → 10 y per second) and a
-  log-rate slider
-- `?t=<days>&rate=<d/s>&follow=<key>` deep links — e.g.
-  `index.html?follow=halley&t=23000` jumps to December 2062, right as Halley
-  swings past 6.7 AU with its tail.
+## Layout
 
-## What's simulated
+    /                 the bench — comparison index
+    /solaris/         run 01
+    /orrery/          run 02
 
-- Kepler's equation solved per body per frame (Newton–Raphson), positions
-  transformed through the standard Ω/ω/ι rotation to heliocentric J2000.
-- The Moon orbits Earth in the correct plane; its orbit line rides along
-  with Earth.
-- Halley's comet: retrograde 75-yr orbit, dashed path, sun-pointing ion-tail
-  ribbon (additive crossed planes) and a brightness that breathes with rAU.
-- Procedural textures (no image assets): banded gas giants, banded Saturn
-  rings with Cassini gap, Earth with a drifting cloud layer and atmosphere
-  rim glow, cratered Moon, turbulent sun surface + corona + bloom.
-- 900 twinkling stars + Milky Way band, faint ecliptic reference grid.
+Each build is self-contained in its own directory and can be opened directly.
+Nothing is shared between them.
 
-## HUD
+## Adding a run
 
-Glassmorphic dark panels: simulation clock (top-left), display toggles
-(orbit lines / labels / ecliptic / bloom), selection card (bottom-left) with
-period, semi-major axis, eccentricity, day length and a live distance
-readout, and the time dock (bottom-center). All deep-link states sync the
-chip highlighting automatically.
-
-## Tests
-
-    node test/test-orbital.mjs
-
-Verifies the Kepler solver (residual → 1e-12), vis-viva at perihelion,
-date formatting, and rate formatting.
+Drop the build in a new directory, then append one object to `ENTRIES` at the top
+of the root `index.html`. The run cards, the counts, and the divergence matrix all
+render from that array — the matrix automatically hides any axis where every run
+agrees, so contested ground surfaces on its own as runs accumulate.
