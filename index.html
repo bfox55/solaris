@@ -254,6 +254,26 @@
         "Files": "1 self-contained",
         "Tests": "none"
       }
+    },
+    {
+      model: "xAI Grok 4.5",
+      date: "2026-07-16",
+      name: "Cosmos",
+      href: "grok/",
+      src: "https://x.ai/news/grok-4-5",
+      note: "xAI's own published build of this prompt — the 'Cosmos' demo shipped with the Grok 4.5 launch (three.js r170). Like the in-house runs it solves Kepler's equation with real per-planet eccentricities, but on view-compressed radii (distances 14–118 in scene units, not AU) with no secular rates, so the system is a clean diagram rather than a period-accurate ephemeris. The HUD leads with time-scale presets (Pause / 1× / 30× / 1y/s / 10y/s) plus a brightness slider for dialing down to Neptune — the two things a casual viewer actually reaches for — and adds a black-hole deploy toy the prompt never asked for. Shipped here as a self-contained static build (vendored three.js, zero CDN) of the standalone Grok app, because xAI's demo is embedded inline in their marketing page rather than a standalone file.",
+      spec: {
+        "Element set": "view-scaled a, real eccentricities",
+        "Secular rates": "no",
+        "Solver": "fixed-point E = M + e·sin E, 6 iter",
+        "Velocity": "finite-difference, Δt = 0.05 d",
+        "Bodies": "Sun + 8 planets + Moon + asteroid belt",
+        "Axial tilt": "per planet",
+        "Starfield": "procedural points + nebula shader",
+        "three.js": "vendored 0.170.0, 1.25 MB",
+        "Files": "5 files + vendored three.js",
+        "Tests": "none"
+      }
     }
   ];
 
