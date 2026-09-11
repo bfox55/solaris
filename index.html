@@ -294,6 +294,26 @@
         "Files": "3 app files + 12 textures + 9 fonts + licenses",
         "Tests": "source ships tests; build ships none"
       }
+    },
+    {
+      model: "Fable — Daniel Burla",
+      date: "2026-09-10",
+      name: "Orrery (solar-system)",
+      href: "solar-system/",
+      src: "https://github.com/daniel-burla/solar-system",
+      note: "Daniel Burla's second standalone build of this prompt, created with Fable — vanilla ES modules (importmap + three.js, no build step or React, unlike his other 'Orrery'), redistributed with Daniel's direct permission; the repo carries no license file, so his permission is the whole basis (see solar-system/PROVENANCE.md). Fully self-contained: three.js r170 core + its jsm addon closure vendored locally (no CDN), and every embedded third-party IP kept intact — Solar System Scope planet textures (CC BY 4.0), Inter + JetBrains Mono (SIL OFL), and JPL Table 1 orbital data. Its differentiator is the moon roster and physical fidelity: 8 planets plus 7 major moons (Moon, Io, Europa, Ganymede, Callisto, Titan, Triton) on JPL Table 1 elements with per-century secular rates, real per-planet obliquity and spin, an 8K Milky Way background, and a HUD with time presets Real→1 yr/s plus slider, reverse, pause, a true-scale toggle, and a Glow (bloom) toggle. Credit: Daniel Burla; it is his work, not ours.",
+      spec: {
+        "Element set": "JPL Table 1, elements + secular rates",
+        "Secular rates": "yes — JPL Table 1, 1800–2050",
+        "Solver": "Newton–Raphson on M = E − e·sin E",
+        "Velocity": "not computed (Kepler placement, no vis-viva)",
+        "Bodies": "8 planets + 7 moons (Moon, Io, Europa, Ganymede, Callisto, Titan, Triton)",
+        "Axial tilt": "per planet, real obliquity + spin period",
+        "Starfield": "8K Milky Way texture, not a catalog",
+        "three.js": "vendored r170 core + jsm addons, no CDN",
+        "Files": "7 JS modules + css + 14 textures + vendored three.js + fonts",
+        "Tests": "none"
+      }
     }
   ];
 
