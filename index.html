@@ -314,6 +314,26 @@
         "Files": "7 JS modules + css + 14 textures + vendored three.js + fonts",
         "Tests": "none"
       }
+    },
+    {
+      model: "Qwen3.8-27B NVFP4 (local, via Hermes)",
+      date: "2026-09-11",
+      name: "HELIOS",
+      href: "helios/",
+      src: "https://github.com/bfox55/solaris/tree/master/helios",
+      note: "A second build of this same fixed brief from the same local model as run 01 — stated plainly so the card doesn't hide it, because the interesting thing is what the same engine did differently the second time. Everything lives in one self-contained index.html (no module split, no test suite). Motion is Keplerian: Newton–Raphson per frame with real per-planet eccentricities, so planets visibly speed up at perihelion and the drawn ellipses are shaped correctly — but the phase is a golden-angle offset rather than a J2000 mean anomaly, so absolute positions at a given date are not epoch-true the way run 01 claims to be; only the periods and Kepler's 2nd law are faithful. The HUD is the most worked here: a dedicated system picker, click-to-focus with a damped camera tween, a log time-warp (slider 0.05 → 7,300 d/s, presets 1 d → 10 yr) with a reverse-time toggle, and 1–9 keys that jump straight to a body. 16,800 seeded stars with a tilted Milky-Way band.",
+      spec: {
+        "Element set": "static (a, e, period); golden-angle phase, not epoch-true",
+        "Secular rates": "no",
+        "Solver": "Newton–Raphson on M = E − e·sin E (7 it, 1e-6)",
+        "Velocity": "not computed (Kepler placement, no vis-viva)",
+        "Bodies": "Sun + 8 planets + Moon",
+        "Axial tilt": "per planet",
+        "Starfield": "seeded LCG, 16,800 points + tilted band",
+        "three.js": "vendored r160, 1.3 MB",
+        "Files": "1 self-contained + vendored three.js",
+        "Tests": "none"
+      }
     }
   ];
 
