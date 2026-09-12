@@ -216,7 +216,7 @@
      ============================================================ */
   var ENTRIES = [
     {
-      model: "Qwen3.8-27B NVFP4 (local, via Hermes)",
+      model: "Qwen3.8-27B (all NVFP4) — local, via Hermes",
       date: "2026-09-07",
       name: "SOLARIS",
       href: "solaris/",
@@ -316,12 +316,12 @@
       }
     },
     {
-      model: "Qwen3.8-27B NVFP4 (local, via Hermes)",
+      model: "Qwen3.8-27B (official NV release, mixed precision) — local, via Hermes",
       date: "2026-09-11",
       name: "HELIOS",
       href: "helios/",
       src: "https://github.com/bfox55/solaris/tree/master/helios",
-      note: "A second build of this same fixed brief from the same local model as run 01 — stated plainly so the card doesn't hide it, because the interesting thing is what the same engine did differently the second time. Everything lives in one self-contained index.html (no module split, no test suite). Motion is Keplerian: Newton–Raphson per frame with real per-planet eccentricities, so planets visibly speed up at perihelion and the drawn ellipses are shaped correctly — but the phase is a golden-angle offset rather than a J2000 mean anomaly, so absolute positions at a given date are not epoch-true the way run 01 claims to be; only the periods and Kepler's 2nd law are faithful. The HUD is the most worked here: a dedicated system picker, click-to-focus with a damped camera tween, a log time-warp (slider 0.05 → 7,300 d/s, presets 1 d → 10 yr) with a reverse-time toggle, and 1–9 keys that jump straight to a body. 16,800 seeded stars with a tilted Milky-Way band.",
+      note: "A second build of this same fixed brief from the same model family as run 01, but a different precision: run 01 is an all-NVFP4 build, this one runs the official Nvidia release of Qwen3.8 in mixed precision — some of the attention layers are less heavily quantized, so it should score slightly higher in quality. Everything lives in one self-contained index.html (no module split, no test suite). Motion is Keplerian: Newton–Raphson per frame with real per-planet eccentricities, so planets visibly speed up at perihelion and the drawn ellipses are shaped correctly — but the phase is a golden-angle offset rather than a J2000 mean anomaly, so absolute positions at a given date are not epoch-true the way run 01 claims to be; only the periods and Kepler's 2nd law are faithful. The HUD is the most worked here: a dedicated system picker, click-to-focus with a damped camera tween, a log time-warp (slider 0.05 → 7,300 d/s, presets 1 d → 10 yr) with a reverse-time toggle, and 1–9 keys that jump straight to a body. 16,800 seeded stars with a tilted Milky-Way band.",
       spec: {
         "Element set": "static (a, e, period); golden-angle phase, not epoch-true",
         "Secular rates": "no",

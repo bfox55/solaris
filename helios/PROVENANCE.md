@@ -4,10 +4,12 @@
 
 - **App:** Original build generated for this bench — not a vendored copy of a
   third-party project.
-- **Model:** **Qwen3.8-27B NVFP4 (local, via Hermes)** — the same local model that
-  produced run 01 (SOLARIS). Stated here and on the card so the bench doesn't
-  hide that a second run of the fixed brief came from the same engine; the
-  interesting comparison is what that engine chose differently the second time.
+- **Model:** **Qwen3.8-27B — official Nvidia release, mixed precision
+  (local, via Hermes, on the 5060 Ti)**. Note the precision difference
+  from run 01 (SOLARIS): that build is an all-NVFP4 model, while this
+  build uses the official release where some attention layers are less
+  heavily quantized — a slightly higher-quality model doing the same
+  fixed brief.
 - **Date:** 2026-09-11.
 - **Brief:** the fixed Orrery Bench prompt — *"Make a beautiful simulation of the
   universe and solar system. should be sped up with adjustable time, realistic
