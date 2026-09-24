@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="One prompt, held fixed, built by a different model each time. Live builds, source, and where they diverge.">
+<meta name="description" content="The same one-line prompt given to different AI models, one shot each. Open every build, read the source, and see where they differ.">
 <title>Orrery Bench</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -137,6 +137,7 @@
   /* ---------- matrix ---------- */
   .scroll{overflow-x:auto; border:1px solid var(--rule); background:var(--sheet)}
   table{border-collapse:collapse; width:100%; font-size:14px; min-width:520px}
+  #matrix{min-width:1180px}
   th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--rule); vertical-align:top}
   thead th{
     font-family:var(--f-data); font-size:10px; letter-spacing:.13em; text-transform:uppercase;
@@ -153,6 +154,40 @@
     margin:0; overflow-x:auto; background:var(--sheet); border:1px solid var(--rule);
     padding:14px 16px; font-family:var(--f-data); font-size:12.5px; line-height:1.65; color:var(--ink);
   }
+  /* ---------- how it works ---------- */
+  .how{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--rule); border:1px solid var(--rule)}
+  .how div{background:var(--sheet); padding:14px 16px; display:flex; flex-direction:column; gap:3px}
+  .how b{font-family:var(--f-disp); font-weight:600; font-size:16px}
+  .how span{font-size:14.5px; color:var(--ink-2); line-height:1.45}
+
+  /* ---------- at a glance ---------- */
+  .glance td a{font-family:var(--f-data); font-size:11px; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; white-space:nowrap}
+  .glance td a:hover{text-decoration:underline}
+  table.glance{min-width:0}
+  .glance td.num{font-family:var(--f-disp); font-weight:700; color:var(--accent); width:1%; font-variant-numeric:tabular-nums}
+  .glance td.model{color:var(--ink-2)}
+  .glance td.date{font-family:var(--f-data); font-size:12px; color:var(--dim); white-space:nowrap}
+
+  /* ---------- run text blocks ---------- */
+  .facts{display:flex; flex-direction:column; gap:10px; margin:0}
+  .facts div{display:grid; grid-template-columns:92px 1fr; gap:12px}
+  .facts dt{font-family:var(--f-data); font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--dim); padding-top:4px}
+  .facts dd{margin:0; font-size:15.5px; color:var(--ink-2); max-width:66ch}
+  details.more summary{
+    cursor:pointer; font-family:var(--f-data); font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--dim);
+    list-style:none; display:inline-flex; align-items:center; gap:8px;
+  }
+  details.more summary::-webkit-details-marker{display:none}
+  details.more summary::before{content:"+"; font-size:14px; color:var(--accent); width:10px}
+  details.more[open] summary::before{content:"\2212"}
+  details.more summary:hover{color:var(--ink)}
+  details.more summary:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+  details.more[open] .specs{margin-top:12px}
+  .lede-note{margin:10px 0 0; font-size:14.5px; color:var(--dim); max-width:70ch}
+  .howto summary{cursor:pointer; list-style:none}
+  .howto summary::-webkit-details-marker{display:none}
+  .howto[open] summary{margin-bottom:14px}
+
   footer{border-top:1px solid var(--rule); padding-top:20px; color:var(--dim); font-size:13.5px; display:flex; flex-wrap:wrap; gap:6px 18px}
 
   @media (max-width:640px){
@@ -160,6 +195,10 @@
     .run{grid-template-columns:1fr}
     .plate{flex-direction:row; align-items:center; gap:10px; padding:10px 18px; border-right:0; border-bottom:1px solid var(--rule); justify-content:flex-start}
     .runbody{padding:18px}
+    .how{grid-template-columns:1fr}
+    .glance th:nth-child(4), .glance td.date{display:none}
+    .glance th, .glance td{padding:9px 10px}
+    .facts div{grid-template-columns:1fr; gap:2px}
   }
   @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
@@ -167,38 +206,49 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="label">Controlled comparison</div>
+    <div class="label">Same prompt, different models</div>
     <h1>Orrery Bench</h1>
-    <p>One prompt, held fixed, handed to a different model each time. Everything below was built from the identical brief — so the differences are the models&rsquo; own, not the instructions&rsquo;.</p>
+    <p>We give different AI models the exact same one-line prompt and publish what each one builds. Since the prompt never changes, the differences between these simulations come from the models themselves.</p>
     <div class="meta" id="meta"></div>
   </header>
 
   <section>
-    <div class="label" style="margin-bottom:10px">The control &mdash; identical for every run</div>
+    <div class="label" style="margin-bottom:10px">The prompt &mdash; word for word, every run</div>
     <div class="control">
       <blockquote id="prompt"></blockquote>
-      <p class="note">Verbatim. No follow-up steering, no reference implementation, no shared code between runs.</p>
+    </div>
+    <div class="how" style="margin-top:14px">
+      <div><b>Same prompt</b><span>Copied exactly, typos and all. Nothing added.</span></div>
+      <div><b>One shot</b><span>No follow-up hints, fixes, or steering after the prompt.</span></div>
+      <div><b>Built alone</b><span>No reference build and no code shared between runs.</span></div>
     </div>
   </section>
 
   <section>
-    <h2>Runs</h2>
+    <h2>At a glance</h2>
+    <div class="scroll"><table class="glance" id="glance"></table></div>
+    <p class="lede-note">Some runs are community builds made by other people with the model named. Their cards give credit and explain the permission to host them here.</p>
+  </section>
+
+  <section>
+    <h2>The runs</h2>
     <div class="runs" id="runs"></div>
   </section>
 
   <section>
-    <h2>Where they diverge</h2>
+    <h2>Side by side</h2>
+    <p class="lede-note" style="margin:-6px 0 14px">How each build handles the physics and the engineering. Rows where every run agrees are hidden automatically.</p>
     <div class="scroll"><table id="matrix"></table></div>
   </section>
 
-  <section class="howto">
-    <div class="label">Adding a run</div>
+  <details class="howto">
+    <summary class="label">For maintainers: adding a run</summary>
     <p style="margin:0; max-width:64ch; color:var(--ink-2); font-size:15.5px">
-      Drop the build in its own directory, then append one object to <code style="font-family:var(--f-data);font-size:13px">ENTRIES</code>
-      at the top of this file. The cards and the divergence matrix both render from it, so nothing else needs editing.
+      Put the build in its own directory, then add one object to <code style="font-family:var(--f-data);font-size:13px">ENTRIES</code>
+      at the top of this file. Everything on the page renders from that list, so nothing else needs editing.
     </p>
     <pre id="snippet"></pre>
-  </section>
+  </details>
 
   <footer>
     <span>Hosted on GitHub Pages from <b>bfox55/solaris</b>.</span>
@@ -212,16 +262,19 @@
 
   /* ============================================================
      ADD A RUN HERE. Everything on the page renders from this.
-     Keep `spec` keys consistent so the matrix lines up.
+     standout = what it does best; tradeoff = what it gives up;
+     credit   = only for builds made by someone else (who, license, basis).
+     Keep `spec` keys consistent so the side-by-side table lines up.
      ============================================================ */
   var ENTRIES = [
     {
-      model: "Qwen3.8-27B (all NVFP4) — local, via Hermes",
+      model: "Qwen3.8-27B (all NVFP4), local via Hermes",
       date: "2026-09-07",
       name: "SOLARIS",
       href: "solaris/",
       src: "https://github.com/bfox55/solaris",
-      note: "Splits into ES modules with the orbital maths isolated and unit-tested — the only run so far that ships tests, asserting Kepler solver error below 1e-9, Mercury's perihelion speed, and vis-viva at 1 AU against 29.784 km/s. Goes furthest on content: Halley's Comet with its real 1986 perihelion epoch and retrograde 162.3° inclination, the Moon, and per-planet axial tilt and spin direction. Rate presets (1h / 1d / 1w / 1mo / 1y / 10y) beat a raw slider for getting somewhere specific.",
+      standout: "The only build with tests. Its orbital maths sits in separate modules with 7 checks: Kepler solver error under 1e-9, Mercury's speed at its closest point to the Sun, and Earth's orbital speed of 29.784 km/s. It also has the most extras: Halley's Comet on its real orbit (1986 perihelion, backwards 162.3° tilt), the Moon, and each planet's own tilt and spin direction. Speed presets run from 1 hour to 10 years per second, which beats a raw slider for getting somewhere specific.",
+      tradeoff: "Uses fixed J2000 orbital data with no slow-drift rates, so accuracy fades the further you go from the year 2000.",
       spec: {
         "Element set": "J2000 Keplerian, 5 dp, static",
         "Secular rates": "no",
@@ -241,7 +294,8 @@
       name: "Ephemeris Orrery",
       href: "orrery/",
       src: "https://github.com/bfox55/solaris/tree/master/orrery",
-      note: "Carries the full-precision JPL elements together with their per-century rates, so the model stays valid across 1800–2050 instead of drifting from a fixed epoch. Orbit paths are sampled from the same solver that places the body, so the drawn ellipse and the planet on it cannot disagree. Adds a true-distance toggle that swaps the compressed log radial scale for real AU spacing — the moment the solar system stops reading as a diagram. No tests, which is the clearest thing it gives up.",
+      standout: "Uses JPL's full-precision orbital data plus its per-century drift rates, so positions stay accurate from 1800 to 2050. Orbit paths are drawn by the same maths that places each planet, so a planet can never sit off its own line. A true-distance toggle swaps the squeezed default layout for real spacing, which is when the Solar System stops looking like a diagram.",
+      tradeoff: "No tests. That is the clearest thing it gives up.",
       spec: {
         "Element set": "JPL J2000, full precision",
         "Secular rates": "yes — per century, 1800–2050",
@@ -256,12 +310,14 @@
       }
     },
     {
-      model: "xAI Grok — community build",
+      model: "xAI Grok (community build)",
       date: "2026-07-11",
       name: "Cosmos",
       href: "grok/",
       src: "https://github.com/MinkwanK/grok-solar-system",
-      note: "A third-party 'Cosmos' build of this prompt by MinkwanK (김민관) — MIT-licensed, self-hosted, shipped here with its LICENSE intact. Not xAI's artifact: xAI's Grok 4.5 demo is a separate inline three.js r172 canvas embedded in their marketing page, whereas this is MinkwanK's standalone static build (three.js 0.170.0, self-contained, zero CDN). Like the in-house runs it solves Kepler's equation with real per-planet eccentricities, but on view-compressed radii (distances 14–118 in scene units, not AU) with no secular rates, so the system is a clean diagram rather than a period-accurate ephemeris. The HUD leads with time-scale presets (Pause / 1× / 30× / 1y/s / 10y/s) plus a brightness slider for dialing down to Neptune — the two things a casual viewer actually reaches for — and adds a black-hole deploy toy the prompt never asked for. Credit: MinkwanK (see grok/LICENSE); it is their work, not ours.",
+      standout: "Built for casual viewers. The HUD leads with speed presets (Pause, 1×, 30×, 1 yr/s, 10 yr/s) and a brightness slider for seeing all the way out to Neptune. It solves Kepler's equation with each planet's real orbit shape, and adds a black-hole toy the prompt never asked for.",
+      tradeoff: "Distances are squeezed to fit the view (not real AU) and there are no drift rates. It's a clean diagram, not an accurate sky for a given date.",
+      credit: "Built by MinkwanK (김민관). MIT-licensed and hosted here with its LICENSE intact (see grok/LICENSE). This is not xAI's own demo, which is a separate inline three.js r172 canvas on xAI's marketing page. It's MinkwanK's standalone static build (three.js 0.170, no CDN). It is their work, not ours.",
       spec: {
         "Element set": "view-scaled a, real eccentricities",
         "Secular rates": "no",
@@ -281,7 +337,9 @@
       name: "Orrery",
       href: "universe/",
       src: "https://github.com/daniel-burla/universe-simulator",
-      note: "A standalone 'Orrery' build of this prompt, created with OpenAI Astra (Vite + React + TS). The source repo carries no license file, so it is redistributed on the author's direct permission — that permission is the whole legal basis (attribution in universe/PROVENANCE.md). Shipped as the author's built, self-contained dist: three.js 0.180 bundled (484 KB), zero CDN, and all its embedded third-party IP kept intact — Solar System Scope planet textures (CC BY 4.0, with ATTRIBUTION.md), SIL-licensed DM Sans/Manrope fonts, and JPL Table 1 orbital data. Its real differentiator is the two-scale experience: the solar system zooms out into an illustrative Milky Way view, and time runs from real time to a simulated year per second with reverse-and-pause, clamped to JPL Table 1's valid 1800–2050 window. It is the author's work, not ours.",
+      standout: "Works at two scales: zoom out of the Solar System into an illustrative Milky Way. Time runs from real time up to a simulated year per second, with reverse and pause, and stays inside the 1800–2050 window where JPL's data is valid. Built with Vite + React + TypeScript, with real planet textures.",
+      tradeoff: "Doesn't compute orbital speed. The stars and Milky Way are illustrative, not a star catalog. The source has tests, but the shipped build doesn't include them.",
+      credit: "Built by daniel-burla. The source repo has no license file, so it's shared here only with the author's direct permission (see universe/PROVENANCE.md). This is the author's built, self-contained version: three.js 0.180 bundled (484 KB), no CDN. All embedded third-party material is kept intact: Solar System Scope planet textures (CC BY 4.0, with ATTRIBUTION.md), DM Sans/Manrope fonts (SIL OFL), and JPL Table 1 orbital data. It is the author's work, not ours.",
       spec: {
         "Element set": "JPL Table 1, elements + secular rates",
         "Secular rates": "yes — JPL Table 1, 1800–2050",
@@ -301,7 +359,9 @@
       name: "Orrery (solar-system)",
       href: "solar-system/",
       src: "https://github.com/daniel-burla/solar-system",
-      note: "A second standalone build of this prompt, created with Fable — vanilla ES modules (importmap + three.js, no build step or React, unlike the other 'Orrery' here). The source repo carries no license file, so it is redistributed on the author's direct permission — that permission is the whole legal basis (attribution in solar-system/PROVENANCE.md). Fully self-contained: three.js r170 core + its jsm addon closure vendored locally (no CDN), and every embedded third-party IP kept intact — Solar System Scope planet textures (CC BY 4.0), Inter + JetBrains Mono (SIL OFL), and JPL Table 1 orbital data. Its differentiator is the moon roster and physical fidelity: 8 planets plus 7 major moons (Moon, Io, Europa, Ganymede, Callisto, Titan, Triton) on JPL Table 1 elements with per-century secular rates, real per-planet obliquity and spin, an 8K Milky Way background, and a HUD with time presets Real→1 yr/s plus slider, reverse, pause, a true-scale toggle, and a Glow (bloom) toggle. It is the author's work, not ours.",
+      standout: "The most moons of the earlier runs: 8 planets plus 7 major moons (Moon, Io, Europa, Ganymede, Callisto, Titan, Triton) on JPL data with drift rates, real tilts and spin periods, and an 8K Milky Way backdrop. The HUD has time presets from real time to 1 yr/s, a slider, reverse, pause, a true-scale toggle and a Glow (bloom) toggle. Plain ES modules with no build step, unlike the other build called 'Orrery'.",
+      tradeoff: "Doesn't compute orbital speed. No tests.",
+      credit: "Built by daniel-burla. The source repo has no license file, so it's shared here only with the author's direct permission (see solar-system/PROVENANCE.md). Fully self-contained: three.js r170 and its add-ons vendored locally, no CDN. All embedded third-party material is kept intact: Solar System Scope planet textures (CC BY 4.0), Inter + JetBrains Mono (SIL OFL), and JPL Table 1 orbital data. It is the author's work, not ours.",
       spec: {
         "Element set": "JPL Table 1, elements + secular rates",
         "Secular rates": "yes — JPL Table 1, 1800–2050",
@@ -316,12 +376,13 @@
       }
     },
     {
-      model: "Qwen3.8-27B (official NV release, mixed precision) — local, via Hermes",
+      model: "Qwen3.8-27B (official Nvidia release, mixed precision), local via Hermes",
       date: "2026-09-11",
       name: "HELIOS",
       href: "helios/",
       src: "https://github.com/bfox55/solaris/tree/master/helios",
-      note: "A second build of this same fixed brief from the same model family as run 01, but a different precision: run 01 is an all-NVFP4 build, this one runs the official Nvidia release of Qwen3.8 in mixed precision — some of the attention layers are less heavily quantized, so it should score slightly higher in quality. Everything lives in one self-contained index.html (no module split, no test suite). Motion is Keplerian: Newton–Raphson per frame with real per-planet eccentricities, so planets visibly speed up at perihelion and the drawn ellipses are shaped correctly — but the phase is a golden-angle offset rather than a J2000 mean anomaly, so absolute positions at a given date are not epoch-true the way run 01 claims to be; only the periods and Kepler's 2nd law are faithful. The HUD is the most worked here: a dedicated system picker, click-to-focus with a damped camera tween, a log time-warp (slider 0.05 → 7,300 d/s, presets 1 d → 10 yr) with a reverse-time toggle, and 1–9 keys that jump straight to a body. 16,800 seeded stars with a tilted Milky-Way band.",
+      standout: "Same model family as run 01, but the official Nvidia release, where some attention layers are less heavily quantized, so it should be slightly higher quality. It has the most worked HUD of the two Qwen runs: a body picker, click-to-focus with a smooth camera move, a log time-warp (0.05 to 7,300 days per second, presets from 1 day to 10 years) with reverse, and keys 1–9 that jump to a body. 16,800 seeded stars with a tilted Milky Way band, all in one self-contained file.",
+      tradeoff: "Planets speed up and slow down correctly along properly shaped ellipses, but their starting positions are spread by a golden-angle offset instead of real dates. Only the periods and Kepler's second law are faithful, so where a planet sits on a given date isn't. No orbital speed, no tests.",
       spec: {
         "Element set": "static (a, e, period); golden-angle phase, not epoch-true",
         "Secular rates": "no",
@@ -334,6 +395,27 @@
         "Files": "1 self-contained + vendored three.js",
         "Tests": "none"
       }
+    },
+    {
+      model: "Claude Opus 5.5",
+      date: "2026-09-24",
+      name: "Ecliptic Orrery",
+      href: "ecliptic/",
+      src: "https://github.com/bfox55/solaris/tree/master/ecliptic",
+      standout: "Opens on today's real sky: JPL data with drift rates, plus Pluto and 6 moons set by each body's real pole direction. Uranus lies on its side, Saturn's rings are angled correctly for the date, and the Moon shows its true phase and next full moon. About 14,300 asteroids, Jupiter Trojans and Kuiper-belt objects have their orbits solved on the GPU, with gaps in the main belt where Jupiter's pull clears it. The Milky Way, 49 named bright stars, constellation figures and nearby galaxies sit where they really are. A true-scale toggle shrinks every world to real size in an animated transition.",
+      tradeoff: "Planet spin on screen is slowed at high speeds so it doesn't just flicker, though orbital positions are never slowed. Loads three.js from a CDN instead of vendoring it. No tests.",
+      spec: {
+        "Element set": "JPL Table 1, elements + secular rates",
+        "Secular rates": "yes — JPL Table 1, 1800–2050 (clamped 1600–2400)",
+        "Solver": "Newton–Raphson on M = E − e·sin E; belts solved on GPU",
+        "Velocity": "vis-viva, km/s",
+        "Bodies": "Sun + 8 planets + Pluto + 6 moons + ~14,300 belt objects",
+        "Axial tilt": "per body, IAU pole directions",
+        "Starfield": "seeded PRNG, 16k points + 49 named stars + Milky Way shader",
+        "three.js": "r128 from cdnjs",
+        "Files": "1 self-contained",
+        "Tests": "none"
+      }
     }
   ];
 
@@ -342,26 +424,40 @@
   /* ---------- render ---------- */
   var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){
     return ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;" })[c]; }); };
+  var num = function(i){ return String(i+1).padStart(2,"0"); };
+  var dates = ENTRIES.map(function(e){ return e.date; }).sort();
 
   document.getElementById("prompt").textContent = PROMPT;
 
   document.getElementById("meta").innerHTML =
     "<span><b>" + ENTRIES.length + "</b> runs</span>" +
-    "<span>first <b>" + ENTRIES[0].date + "</b></span>" +
-    "<span>latest <b>" + ENTRIES[ENTRIES.length-1].date + "</b></span>" +
-    "<span>prompt unchanged since <b>" + ENTRIES[0].date + "</b></span>";
+    "<span>earliest build <b>" + dates[0] + "</b></span>" +
+    "<span>latest build <b>" + dates[dates.length-1] + "</b></span>";
+
+  document.getElementById("glance").innerHTML =
+    "<thead><tr><th>#</th><th>Build</th><th>Model</th><th>Date</th><th></th></tr></thead><tbody>" +
+    ENTRIES.map(function(e, i){
+      return "<tr><td class=\"num\">" + num(i) + "</td>" +
+        "<td><a href=\"#run-" + num(i) + "\" style=\"font-family:inherit;font-size:14px;letter-spacing:0;text-transform:none\">" + esc(e.name) + "</a></td>" +
+        "<td class=\"model\">" + esc(e.model) + "</td>" +
+        "<td class=\"date\">" + esc(e.date) + "</td>" +
+        "<td><a href=\"" + esc(e.href) + "\">Open &rarr;</a></td></tr>";
+    }).join("") + "</tbody>";
 
   document.getElementById("runs").innerHTML = ENTRIES.map(function(e, i){
     var specs = Object.keys(e.spec).map(function(k){
       return '<div class="spec"><dt>' + esc(k) + '</dt><dd>' + esc(e.spec[k]) + '</dd></div>';
     }).join("");
-    return '<article class="run">' +
-      '<div class="plate"><span class="n">' + String(i+1).padStart(2,"0") + '</span><span class="r">Run</span></div>' +
+    var fact = function(label, text){
+      return text ? '<div><dt>' + label + '</dt><dd>' + esc(text) + '</dd></div>' : "";
+    };
+    return '<article class="run" id="run-' + num(i) + '">' +
+      '<div class="plate"><span class="n">' + num(i) + '</span><span class="r">Run</span></div>' +
       '<div class="runbody">' +
         '<div class="runhead"><h3>' + esc(e.name) + '</h3>' +
           '<span class="when">' + esc(e.model) + ' &middot; ' + esc(e.date) + '</span></div>' +
-        '<p>' + esc(e.note) + '</p>' +
-        '<dl class="specs">' + specs + '</dl>' +
+        '<dl class="facts">' + fact("Standout", e.standout) + fact("Trade-off", e.tradeoff) + fact("Credit", e.credit) + '</dl>' +
+        '<details class="more"><summary>Technical details</summary><dl class="specs">' + specs + '</dl></details>' +
         '<div class="links">' +
           '<a class="lnk lnk--go" href="' + esc(e.href) + '">Open the simulation</a>' +
           '<a class="lnk" href="' + esc(e.src) + '">Read the source</a>' +
@@ -369,16 +465,16 @@
       '</div></article>';
   }).join("");
 
-  // matrix: only rows where the runs actually differ
+  // side-by-side: only rows where the runs actually differ
   var keys = Object.keys(ENTRIES[0].spec).filter(function(k){
     var first = ENTRIES[0].spec[k];
     return ENTRIES.some(function(e){ return e.spec[k] !== first; });
   });
-  var head = "<thead><tr><th>Axis</th>" + ENTRIES.map(function(e){
-    return "<th>" + esc(e.name) + "</th>"; }).join("") + "</tr></thead>";
+  var head = "<thead><tr><th>Axis</th>" + ENTRIES.map(function(e, i){
+    return "<th>" + num(i) + " " + esc(e.name) + "</th>"; }).join("") + "</tr></thead>";
   var rows = keys.map(function(k){
     return "<tr><th>" + esc(k) + "</th>" + ENTRIES.map(function(e){
-      var v = e.spec[k], cls = /^(yes|per planet)/i.test(v) ? "y" : (/^(no|none)$/i.test(v) ? "n" : "");
+      var v = e.spec[k], cls = /^(yes|per planet|per body)/i.test(v) ? "y" : (/^(no|none)$/i.test(v) ? "n" : "");
       return "<td" + (cls ? ' class="'+cls+'"' : "") + ">" + esc(v) + "</td>";
     }).join("") + "</tr>";
   }).join("");
@@ -386,12 +482,14 @@
 
   document.getElementById("snippet").textContent =
     "{\n" +
-    '  model: "Model name",\n' +
-    '  date:  "YYYY-MM-DD",\n' +
-    '  name:  "What it calls itself",\n' +
-    '  href:  "its-directory/",\n' +
-    '  src:   "https://github.com/bfox55/solaris/tree/master/its-directory",\n' +
-    '  note:  "What is distinctive about this one — and what it gives up.",\n' +
+    '  model:    "Model name",\n' +
+    '  date:     "YYYY-MM-DD",\n' +
+    '  name:     "What it calls itself",\n' +
+    '  href:     "its-directory/",\n' +
+    '  src:      "https://github.com/bfox55/solaris/tree/master/its-directory",\n' +
+    '  standout: "What it does best, in plain words.",\n' +
+    '  tradeoff: "What it gives up.",\n' +
+    '  credit:   "Only for someone else\'s build: who made it, license, permission basis.",\n' +
     "  spec: {\n" +
     Object.keys(ENTRIES[0].spec).map(function(k){
       return '    "' + k + '": "…"';
