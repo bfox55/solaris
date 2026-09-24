@@ -15,21 +15,27 @@ implementation, and no shared code between runs:
 
 | # | Build | Model | Path |
 |---|---|---|---|
-| 01 | SOLARIS | Qwen3.8-27B NVFP4 (local, via Hermes) | [`/solaris/`](https://bfox55.github.io/solaris/solaris/) |
+| 01 | SOLARIS | Qwen3.8-27B, all NVFP4 (local, via Hermes) | [`/solaris/`](https://bfox55.github.io/solaris/solaris/) |
 | 02 | Ephemeris Orrery | Claude Opus 5 | [`/orrery/`](https://bfox55.github.io/solaris/orrery/) |
+| 03 | Cosmos | xAI Grok (community build by MinkwanK, MIT) | [`/grok/`](https://bfox55.github.io/solaris/grok/) |
+| 04 | Orrery | OpenAI Astra (by daniel-burla, hosted with permission) | [`/universe/`](https://bfox55.github.io/solaris/universe/) |
+| 05 | Orrery (solar-system) | Fable (by daniel-burla, hosted with permission) | [`/solar-system/`](https://bfox55.github.io/solaris/solar-system/) |
+| 06 | HELIOS | Qwen3.8-27B, official Nvidia release, mixed precision (local, via Hermes) | [`/helios/`](https://bfox55.github.io/solaris/helios/) |
+| 07 | Ecliptic Orrery | Claude Opus 5.5 | [`/ecliptic/`](https://bfox55.github.io/solaris/ecliptic/) |
 
 ## Layout
 
-    /                 the bench — comparison index
-    /solaris/         run 01
-    /orrery/          run 02
+    /                 the bench: comparison index
+    /<run-dir>/       one directory per run (see table above)
 
 Each build is self-contained in its own directory and can be opened directly.
-Nothing is shared between them.
+Nothing is shared between them. Third-party builds carry a `PROVENANCE.md` and
+their original license or permission notes.
 
 ## Adding a run
 
 Drop the build in a new directory, then append one object to `ENTRIES` at the top
-of the root `index.html`. The run cards, the counts, and the divergence matrix all
-render from that array — the matrix automatically hides any axis where every run
-agrees, so contested ground surfaces on its own as runs accumulate.
+of the root `index.html`, filling in `standout`, `tradeoff` and, for someone else's
+build, `credit`. The at-a-glance table, run cards, counts and side-by-side table
+all render from that array. The side-by-side table hides any row where every run
+agrees, so the real differences stand out as runs accumulate.
