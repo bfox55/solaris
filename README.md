@@ -22,6 +22,7 @@ implementation, and no shared code between runs:
 | 05 | Orrery (solar-system) | Fable (by daniel-burla, hosted with permission) | [`/solar-system/`](https://bfox55.github.io/solaris/solar-system/) |
 | 06 | HELIOS | Qwen3.8-27B, official Nvidia release, mixed precision (local, via Hermes) | [`/helios/`](https://bfox55.github.io/solaris/helios/) |
 | 07 | Ecliptic Orrery | Claude Opus 5.5 | [`/ecliptic/`](https://bfox55.github.io/solaris/ecliptic/) |
+| 08 | Perihelion | Claude Fable 5.2 | [`/perihelion/`](https://bfox55.github.io/solaris/perihelion/) |
 
 ## Layout
 

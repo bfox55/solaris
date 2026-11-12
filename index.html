@@ -416,6 +416,27 @@
         "Files": "1 self-contained",
         "Tests": "none"
       }
+    },
+    {
+      model: "Claude Fable 5.2",
+      date: "2026-11-12",
+      name: "Perihelion",
+      href: "perihelion/",
+      src: "https://github.com/bfox55/solaris/tree/master/perihelion",
+      standout: "Spans the widest range of scale: zoom from a true-size moon out to a four-armed Milky Way with the Solar System marked inside it, oriented to match the band you see in the sky. The focused body always sits at the scene origin, so close-ups stay steady even at real sizes. JPL data with drift rates places 8 planets, Pluto and Halley's Comet (tail pointing away from the Sun) for the date shown, with 7 moons, IAU pole directions, and Saturn's shadow falling across its rings. Orbit paths fade behind each body like a wake. The HUD shows live distance, orbital speed and light time, and collapses to a phone layout.",
+      tradeoff: "Moons and the 10,500 belt objects use circular orbits. Stars are procedural, with no named stars or constellations. Planet spin is not slowed at high speeds, so it flickers. Loads three.js and its font from CDNs. No tests. The model checked its own output in a headless browser and fixed what it saw before reporting, so this is one prompt but not one draft (see perihelion/PROVENANCE.md).",
+      spec: {
+        "Element set": "JPL Table 1, elements + secular rates",
+        "Secular rates": "yes — JPL Table 1, 1800–2050 (clamped 1000–3000)",
+        "Solver": "Newton–Raphson on M = E − e·sin E (1e-12)",
+        "Velocity": "vis-viva, km/s",
+        "Bodies": "Sun + 8 planets + Pluto + Halley + 7 moons + 10,500 belt objects + Milky Way",
+        "Axial tilt": "per body, IAU pole directions",
+        "Starfield": "seeded PRNG, 20k points + baked Milky Way shader + 90k-point galaxy",
+        "three.js": "0.170.0 from jsDelivr",
+        "Files": "1 self-contained",
+        "Tests": "none"
+      }
     }
   ];
 
