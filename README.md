@@ -23,6 +23,7 @@ implementation, and no shared code between runs:
 | 06 | HELIOS | Qwen3.8-27B, official Nvidia release, mixed precision (local, via Hermes) | [`/helios/`](https://bfox55.github.io/solaris/helios/) |
 | 07 | Ecliptic Orrery | Claude Opus 5.5 | [`/ecliptic/`](https://bfox55.github.io/solaris/ecliptic/) |
 | 08 | Perihelion | Claude Fable 5.2 | [`/perihelion/`](https://bfox55.github.io/solaris/perihelion/) |
+| 09 | Orrery (Hermes) | Qwen3.8-27B, abliterated GGUF (local, via Hermes) | [`/hermes-orrery/`](https://bfox55.github.io/solaris/hermes-orrery/) |
 
 ## Layout
 
