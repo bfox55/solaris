@@ -437,6 +437,27 @@
         "Files": "1 self-contained",
         "Tests": "none"
       }
+    },
+    {
+      model: "Qwen3.8-27B (abliterated GGUF), local via Hermes",
+      date: "2026-11-13",
+      name: "Orrery (Hermes)",
+      href: "hermes-orrery/",
+      src: "https://github.com/bfox55/solaris/tree/master/hermes-orrery",
+      standout: "The most engineered HUD of the bench: glassmorphic panels, a log time-warp slider with 1 h to 1 yr/s presets, a NOW button that snaps the clock to the real current date, a live AU-distance body list, click- or keyboard-tracking with an eased camera fly, and a mobile bottom-sheet layout. The asteroid belt is not a static ring — 1,600 objects, each on its own Kepler orbit from real orbital elements. Every planet surface is generated at runtime by a procedural pipeline — banded gas giants, Earth's continents and ice caps, cratered Moon, and Saturn's ring bands with the Cassini division — so the file ships zero texture assets. Spin uses real sidereal periods, including Venus's and Uranus's retrograde rotation.",
+      tradeoff: "Static J2000 elements with no drift rates, so accuracy fades the further the clock runs from 2000. Planet sizes are cinematic by default (a true-scale toggle gives real ratios). No orbital speed, no named stars, and the starfield is unseeded procedural. Axial tilt is Saturn's rings only — no per-planet obliquity. No tests.",
+      spec: {
+        "Element set": "J2000 Keplerian (5-decimal table), static",
+        "Secular rates": "no",
+        "Solver": "Newton–Raphson on M = E − e·sin E (8 it)",
+        "Velocity": "not computed (Kepler placement, no vis-viva)",
+        "Bodies": "Sun + 8 planets + Moon + 1,600 belt objects on Kepler orbits",
+        "Axial tilt": "Saturn's rings only",
+        "Starfield": "unseeded PRNG, ~12k points + tilted galactic band + 2 nebula sprites",
+        "three.js": "0.160.0 from jsDelivr",
+        "Files": "1 self-contained",
+        "Tests": "none"
+      }
     }
   ];
 
