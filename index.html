@@ -197,7 +197,10 @@
     .runbody{padding:18px}
     .how{grid-template-columns:1fr}
     .glance th:nth-child(4), .glance td.date{display:none}
-    .glance th, .glance td{padding:9px 10px}
+    .glance{font-size:13px}
+    .glance th, .glance td{padding:9px 8px}
+    .glance td a{white-space:normal; letter-spacing:.05em}
+    .glance .opentxt{display:none}
     .facts div{grid-template-columns:1fr; gap:2px}
   }
   @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
@@ -482,7 +485,7 @@
         "<td><a href=\"#run-" + num(i) + "\" style=\"font-family:inherit;font-size:14px;letter-spacing:0;text-transform:none\">" + esc(e.name) + "</a></td>" +
         "<td class=\"model\">" + esc(e.model) + "</td>" +
         "<td class=\"date\">" + esc(e.date) + "</td>" +
-        "<td><a href=\"" + esc(e.href) + "\">Open &rarr;</a></td></tr>";
+        "<td><a href=\"" + esc(e.href) + "\"><span class=\"opentxt\">Open</span> &rarr;</a></td></tr>";
     }).join("") + "</tbody>";
 
   document.getElementById("runs").innerHTML = ENTRIES.map(function(e, i){
